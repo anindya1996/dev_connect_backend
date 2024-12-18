@@ -4,8 +4,17 @@ const { config } = require("dotenv");
 config();
 const User = require("./models/user.js");
 const app = express();
+const cookieParser = require("cookie-parser");
+const authRouter = require("./routes/auth.js");
+const profileRouter = require("./routes/profile.js");
+const requestRouter = require("./routes/request.js");
 
 app.use(express.json());
+app.use(cookieParser());
+
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
 
 //Get user by email-/getUser
 app.get("/getUser", async (req, res) => {
@@ -29,55 +38,6 @@ app.get("/feed", async (req, res) => {
     res.send(users);
   } catch (err) {
     res.status(400).send(`Something went wrong,  ${err.message}`);
-  }
-});
-
-//Add new user- /signup
-app.post("/signup", async (req, res, next) => {
-  // Creating a new instance of user model
-  const user = new User(req.body);
-
-  try {
-    await user.save();
-    res.send("User added successfully!!");
-  } catch (err) {
-    res.status(400).send(`Some error occured: ${err.message}`);
-  }
-});
-
-//Update an user- /update
-app.patch("/update/:userId", async (req, res) => {
-  const userId = req.params?.userId;
-  const data = req.body;
-
-  try {
-    const ALLOWED_UPDATES = [
-      "userId",
-      "photoUrl",
-      "about",
-      "skills",
-      "password",
-      "lastName",
-    ];
-
-    const isUpdateAllowed = Object.keys(data).every((key) =>
-      ALLOWED_UPDATES.includes(key)
-    );
-
-    if (!isUpdateAllowed) {
-      throw new Error(`Update is not allowed`);
-    }
-
-    if (data.skills.length > 10) {
-      throw new Error(`Skills cannot be more than 10`);
-    }
-
-    await User.findByIdAndUpdate({ _id: userId }, data, {
-      runValidators: true,
-    });
-    res.send(`User updated successfully`);
-  } catch (err) {
-    res.status(400).send(`Update failed, ${err.message}`);
   }
 });
 
