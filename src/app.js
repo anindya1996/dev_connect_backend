@@ -2,14 +2,20 @@ const express = require("express");
 const connectDB = require("../config/database");
 const { config } = require("dotenv");
 config();
-const User = require("./models/user.js");
 const app = express();
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/auth.js");
 const profileRouter = require("./routes/profile.js");
 const requestRouter = require("./routes/request.js");
 const userRouter = require("./routes/user.js");
+const cors = require("cors");
 
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 

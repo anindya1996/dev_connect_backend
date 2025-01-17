@@ -14,12 +14,21 @@ const validateSignupData = (req) => {
 };
 
 const validateEditProfileData = (req) => {
-  const { lastName, skills, about, photoUrl } = req.body;
+  const { lastName, skills, about } = req.body;
 
-  const allowedEditFields = ["lastName", "about", "skills", "photoUrl"];
+  const allowedEditFields = [
+    "lastName",
+    "about",
+    "skills",
+    "photoUrl",
+    "firstName",
+    "gender",
+    "age",
+  ];
   const isEditAllowed = Object.keys(req.body).every((field) =>
     allowedEditFields.includes(field)
   );
+  console.log(isEditAllowed);
 
   if (lastName && lastName.length > 20) {
     throw new Error(`Last Name should be less than equal to 20 letters!!`);
@@ -31,10 +40,6 @@ const validateEditProfileData = (req) => {
 
   if (about && about.length > 100) {
     throw new Error(`About should be less than or equal to 100 characters`);
-  }
-
-  if (photoUrl && !validator.isURL(photoUrl)) {
-    throw new Error(`Photo URL is invalid!!`);
   }
 
   return isEditAllowed;

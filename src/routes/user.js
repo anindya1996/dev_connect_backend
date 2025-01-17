@@ -10,17 +10,19 @@ const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills";
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
+
     const connectionRequest = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
     }).populate("fromUserId", USER_SAFE_DATA);
+    // console.log(connectionRequest);
 
     res.json({
-      messgae: "Data fetched sucessfully!!",
+      message: "Data fetched sucessfully!!",
       data: connectionRequest,
     });
   } catch (err) {
-    res.status(400).send(`ERROR: ${err.message}`);
+    res.status(500).send(`ERROR: ${err.message}`);
   }
 });
 
@@ -76,8 +78,11 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       .select(USER_SAFE_DATA)
       .skip(skip)
       .limit(limit);
-    res.json({ data: users });
+    res.send(users);
+    console.log(users);
   } catch (err) {
+    console.log(err);
+
     res.status(500).json(`ERROR: ${err.message}`);
   }
 });

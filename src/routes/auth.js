@@ -23,7 +23,7 @@ authRouter.post("/signup", async (req, res, next) => {
       password: passwordHash,
     });
     await user.save();
-    res.json({ message: "User added successfully!!" });
+    res.json({ message: "${user.firstName} added successfully!!" });
   } catch (err) {
     res.status(400).send(`ERROR: ${err.message}`);
   }
@@ -44,7 +44,7 @@ authRouter.post("/login", async (req, res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
       });
-      res.json({ message: `User logged in successfully` });
+      res.send(user);
     } else {
       throw new Error(`Invalid Credentials!!`);
     }
