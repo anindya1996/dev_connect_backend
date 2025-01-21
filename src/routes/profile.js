@@ -5,7 +5,7 @@ const User = require("../models/user.js");
 
 const profileRouter = express.Router();
 
-//Get profile API- /profile
+// Get profile API- /profile
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;

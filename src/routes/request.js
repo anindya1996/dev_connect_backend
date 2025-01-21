@@ -13,6 +13,7 @@ requestRouter.post(
       const fromUserId = req.user._id;
       const toUserId = req.params.toUserId;
       const status = req.params.status;
+
       const allowedStatus = ["ignored", "interested"];
       if (!allowedStatus.includes(status)) {
         return res.status(400).json({
@@ -52,6 +53,8 @@ requestRouter.post(
         data: data,
       });
     } catch (err) {
+      console.log(err.message);
+
       res.status(400).send(`ERROR:${err.message}`);
     }
   }
